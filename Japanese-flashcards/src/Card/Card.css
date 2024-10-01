@@ -1,33 +1,80 @@
 .card-container {
-    width: 300px;
-    height: auto;
-    margin: 20px auto;
-    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: lightblue;
-    cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.6s;
+    gap: 10px;
   }
   
-  .card-container.easy {
+  .card-scene {
+    width: 400px;
+    height: 300px;
+    perspective: 1000px; 
+    margin-bottom: 50px; 
+    align-items: center;
+  } 
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+  }
+  
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+  
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box; 
+  }
+  
+  .card-front {
+    background-color: lightgray; 
+  }
+  
+  .card-back {
+    transform: rotateY(180deg);
+  }
+  
+  /* Level-specific styles */
+  .card.easy .card-front {
     background-color: lightgreen;
   }
   
-  .card-container.medium {
+  .card.medium .card-front {
     background-color: lightyellow;
   }
   
-  .card-container.hard {
+  .card.hard .card-front {
     background-color: lightcoral;
   }
   
-  .next-button {
-    margin-top: 10px;
+  .card.easy .card-back {
+    background-color: lightgreen;
+  }
+  
+  .card.medium .card-back {
+    background-color: lightyellow;
+  }
+  
+  .card.hard .card-back {
+    background-color: lightcoral;
+  }
+  
+  .next-button { 
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
