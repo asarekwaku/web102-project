@@ -1,43 +1,33 @@
-// Card.js
 import React, { useState } from 'react';
 import './Card.css';
 
-const Card = ({ translations }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const Card = ({ card, handleNextCard }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
 
-  const handleNextCard = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + 1 < Object.keys(translations).length ? prevIndex + 1 : 0
-    );
+  const handleCardClick = () => {
+    setIsFlipped((prev) => !prev);
   };
-
-  const currentTranslationKey = Object.keys(translations)[currentIndex];
-  const currentTranslation = translations[currentTranslationKey];
-
-  // Set the background color based on the level
-  const backgroundColor = (() => {
-    switch (currentTranslation.level) {
-      case 'hard':
-        return 'red';
-      case 'medium':
-        return 'yellow';
-      case 'easy':
-        return 'green';
-      default:
-        return 'white';
-    }
-  })();
 
   return (
     <div
-      className="card-container"
-      style={{ backgroundColor: backgroundColor, padding: '20px', borderRadius: '10px', margin: '20px' }}
+      className={`card-container ${card.level || ''}`}
+      onClick={handleCardClick}
     >
-      <h2>{currentTranslationKey}</h2>
-      <p>Japanese: {currentTranslation.japanese}</p>
-      <p>Romaji: {currentTranslation.romaji}</p>
-      <p>Level: {currentTranslation.level}</p>
-      <button className="next-button" onClick={handleNextCard}>
+      <h2>{isFlipped ? card.question : `How do you say "${card.answer}"?`}</h2>
+      {isFlipped && (
+        <>
+          <p>Romaji: {card.romaji}</p>
+          <p>Level: {card.level}</p>
+        </>
+      )}
+      <button
+        className="next-button"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent flipping when clicking "Next"
+          setIsFlipped(false); // Reset flip state before changing the card
+          handleNextCard();
+        }}
+      >
         Next
       </button>
     </div>
