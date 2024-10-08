@@ -1,16 +1,40 @@
 import React, { useState } from 'react';
 import './Card.css';
 
-const Card = ({ card, handleNextCard }) => {
+const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak, setStreak }) => { // Add streak and setStreak as props
   const [isFlipped, setIsFlipped] = useState(false);
+  const [inputs, setInputs] = useState({ guess: '' });
+  const form = document.querySelector('.textbox');
 
   const handleCardClick = () => {
     setIsFlipped((prev) => !prev);
+    if (!isFlipped) {
+      setInputs({ guess: '' });
+    }
+    form.style.backgroundColor = 'white';
+  };
+
+  const handleChange = (e) => {
+    setInputs((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+    
+  };
+
+  const handleCheck = (e) => {
+    e.preventDefault();
+    
+    if (inputs.guess.toLowerCase() === card.romaji.toLowerCase()) {
+      form.style.backgroundColor = 'green'; 
+      setStreak((prevStreak) => prevStreak + 1); // Update streak in the App component
+    } else {
+      form.style.backgroundColor = 'red';
+      setStreak(0); // Reset streak when wrong
+    }
   };
 
   return (
-
-    
     <div className="card-container">
       <div className="card-scene">
         <div
@@ -30,18 +54,57 @@ const Card = ({ card, handleNextCard }) => {
           </div>
         </div>
       </div>
-      <button
-        className="next-button"
-        onClick={(e) => {
-          e.stopPropagation(); // Prevent flipping when clicking "Next"
-          setIsFlipped(false); // Reset flip state before changing the card
-          handleNextCard();
-          }}>
+      <div>
+        <form className='form' onSubmit={handleCheck}>
+          <input
+            type="text"
+            name="guess"
+            value={inputs.guess}
+            placeholder="What is your answer?"
+            onChange={handleChange}
+            className="textbox"
+          />
+          <button type="submit" className="submit-button">
+            Check
+          </button>
+        </form>
+      </div>
+      <div className="buttons-container">
+        <button
+          className="prev-button button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFlipped(false);
+            setInputs({ guess: '' });
+            handlePreviousCard();
+          }}
+        >
+          Prev
+        </button>
+        <button
+          className="next-button button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFlipped(false);
+            setInputs({ guess: '' });
+            handleNextCard();
+          }}
+        >
           Next
-      </button>
+        </button>
+        <button
+          className="shuffle-button button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFlipped(false);
+            setInputs({ guess: '' });
+            handleShuffle();
+          }}
+        >
+          Shuffle
+        </button>
+      </div>
     </div>
-    
-
   );
 };
 
