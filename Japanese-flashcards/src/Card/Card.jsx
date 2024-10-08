@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import './Card.css';
 
-const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak, setStreak }) => { // Add streak and setStreak as props
+const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak, setStreak, setMaxStreak }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [inputs, setInputs] = useState({ guess: '' });
-  const form = document.querySelector('.textbox');
+  const [formColor, setFormColor] = useState('white'); // New state for form background color
 
   const handleCardClick = () => {
     setIsFlipped((prev) => !prev);
     if (!isFlipped) {
       setInputs({ guess: '' });
     }
-    form.style.backgroundColor = 'white';
+    setFormColor('white'); // Reset form color on card flip
   };
 
   const handleChange = (e) => {
@@ -19,17 +19,17 @@ const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak,
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    
   };
 
   const handleCheck = (e) => {
     e.preventDefault();
-    
+
     if (inputs.guess.toLowerCase() === card.romaji.toLowerCase()) {
-      form.style.backgroundColor = 'green'; 
+      setFormColor('green'); // Set form background to green if correct
       setStreak((prevStreak) => prevStreak + 1); // Update streak in the App component
+      setMaxStreak((prevMaxStreak) => Math.max(prevMaxStreak, streak + 1)); // Update max streak
     } else {
-      form.style.backgroundColor = 'red';
+      setFormColor('red'); // Set form background to red if incorrect
       setStreak(0); // Reset streak when wrong
     }
   };
@@ -63,6 +63,7 @@ const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak,
             placeholder="What is your answer?"
             onChange={handleChange}
             className="textbox"
+            style={{ backgroundColor: formColor }} // Set the input's background color based on formColor state
           />
           <button type="submit" className="submit-button">
             Check
@@ -77,6 +78,7 @@ const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak,
             setIsFlipped(false);
             setInputs({ guess: '' });
             handlePreviousCard();
+            setFormColor('white'); // Reset form color on card change
           }}
         >
           Prev
@@ -88,6 +90,7 @@ const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak,
             setIsFlipped(false);
             setInputs({ guess: '' });
             handleNextCard();
+            setFormColor('white'); // Reset form color on card change
           }}
         >
           Next
@@ -99,6 +102,7 @@ const Card = ({ card, handleNextCard, handleShuffle, handlePreviousCard, streak,
             setIsFlipped(false);
             setInputs({ guess: '' });
             handleShuffle();
+            setFormColor('white'); // Reset form color on shuffle
           }}
         >
           Shuffle
